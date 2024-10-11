@@ -31,7 +31,7 @@ public class DatabaseUtils {
 
     private static final String URL = "jdbc:mysql://localhost:3306/userdb"; // Database URL
     private static final String USER = "root"; // MySQL username
-    private static final String PASSWORD = "pass"; // MySQL password
+    private static final String PASSWORD = "Bishwas@2055"; // MySQL password
 
     /**
      * Establishes a connection to the database.
