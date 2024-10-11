@@ -271,12 +271,35 @@ public void testGetFinishedTasksForUser() throws SQLException {
         assertFalse(result, "The email and phone number should not be registered.");
     }
 
-    @Test
-    public void testUpdateTaskStatusToInProgress() throws SQLException {
-        DatabaseUtils.updateTaskStatus(1, "Still in Process");
-        List<AssignedTask> inProgressTasks = DatabaseUtils.getAssignedTasksSortedByPriority();
-        assertTrue(inProgressTasks.stream().anyMatch(task -> task.getDisasterId() == 1 && task.getStatus().equals("Still in Process")));
-    }
+@Test
+public void testUpdateTaskStatusToInProgress() throws SQLException {
+    // Step 1: Ensure that a disaster report exists for the task
+    DatabaseUtils.saveDisasterReport("testuser", "Earthquake", "Location A", 7, "Severe earthquake");
+    
+    // Step 2: Retrieve the disaster report ID
+    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Earthquake", "Location A");
+
+    // Step 3: Save the assigned task
+    DatabaseUtils.saveAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+
+    // Step 4: Update the task status to "Still in Process"
+    DatabaseUtils.updateTaskStatus(disasterId, "Still in Process");
+
+    // Step 5: Retrieve the task and assert that the status has been updated
+    List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
+    AssignedTask task = tasks.stream()
+                             .filter(t -> t.getDisasterId() == disasterId)
+                             .findFirst()
+                             .orElseThrow(() -> new SQLException("Task not found"));
+    
+    // Step 6: Check if the task status is updated to "Still in Process"
+    assertEquals("Still in Process", task.getStatus(), "The task status should be updated to 'Still in Process'.");
+
+    // Cleanup: Delete the task and the disaster report after the test
+    DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+    DatabaseUtils.deleteDisasterReport("testuser", "Earthquake", "Location A");
+}
+
 
 @Test
 public void testGetAllDisasterReports() throws SQLException {
