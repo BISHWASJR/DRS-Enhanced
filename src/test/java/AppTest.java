@@ -19,19 +19,21 @@ public class AppTest {
 
     private static Connection connection;
 
-    @BeforeAll
-    static void setupAll() throws SQLException {
-        System.out.println("Setting up before all tests.");
-        connection = DatabaseUtils.getConnection();
-        System.out.println("Database connection established.");
-        DatabaseUtils.saveUser("testuser", "password123", "testuser@example.com", "9876543210", "User");
-        Platform.startup(() -> {
-        });
-    }
+   @BeforeAll
+static void setupAll() throws SQLException {
+    System.out.println("Setting up before all tests.");
+    DatabaseUtils.setupDatabase();  // Ensure database and tables are created
+    connection = DatabaseUtils.getConnection();
+    System.out.println("Database connection established.");
+    DatabaseUtils.saveUser("testuser", "password123", "testuser@example.com", "9876543210", "User");
+    Platform.startup(() -> {
+    });
+}
 
     @BeforeEach
     void setup() {
-        System.out.println("Setting up before each test.");
+        DatabaseUtils.deleteUser("testuser");
+    DatabaseUtils.saveUser("testuser", "password123", "testuser@example.com", "9876543210", "User");  
     }
 
     @Test
@@ -90,11 +92,13 @@ public class AppTest {
         assertFalse(isLoggedIn, "Login should fail if the username is empty.");
     }
 
-    @Test
-    public void testGetUserRole() {
-        String role = DatabaseUtils.getUserRole("bishwas");
-        assertEquals("User", role);
-    }
+@Test
+public void testGetUserRole() {
+    DatabaseUtils.saveUser("bishwas", "password123", "bishwas@example.com", "9876543210", "User");
+    String role = DatabaseUtils.getUserRole("bishwas");
+    assertEquals("User", role, "The user role should be 'User'.");
+    DatabaseUtils.deleteUser("bishwas");
+}
 
     @Test
     public void testSaveUser() {
@@ -125,34 +129,112 @@ public class AppTest {
         assertTrue(reports.stream().anyMatch(r -> r.getUsername().equals("testuser") && r.getDisasterType().equals("Fire") && r.getLocation().equals("Location A")));
         DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
     }
+@Test
+public void testGetAssignedTasksSortedByPriority() throws SQLException {
+    // Step 1: Insert disaster reports without priority
+    DatabaseUtils.saveDisasterReport("testuser", "Earthquake", "Location A", 1, "Severe earthquake");
+    int disasterId1 = DatabaseUtils.getDisasterReportId("testuser", "Earthquake", "Location A");
+
+    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 2, "Severe flood");
+    int disasterId2 = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
+
+    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location C", 3, "Severe fire");
+    int disasterId3 = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location C");
+
+    // Step 2: Update priority for each disaster report
+    DatabaseUtils.updateDisasterPriority(disasterId1, "Very High");
+    DatabaseUtils.updateDisasterPriority(disasterId2, "High");
+    DatabaseUtils.updateDisasterPriority(disasterId3, "Medium");
+
+    // Step 3: Insert assigned tasks for these disaster reports
+    DatabaseUtils.saveAssignedTask(disasterId1, "Rescue Team", "Handle rescue operations");
+    DatabaseUtils.saveAssignedTask(disasterId2, "Medical Team", "Provide medical aid");
+    DatabaseUtils.saveAssignedTask(disasterId3, "Firefighters", "Control fire");
+
+    // Step 4: Fetch tasks sorted by priority
+    List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
+
+    // Step 5: Debugging output
+    tasks.forEach(task -> System.out.println("Task: " + task.getTaskDescription() + ", Priority: " + task.getPriority()));
+
+    // Step 6: Verify tasks are sorted by priority
+    assertNotNull(tasks, "Assigned tasks list should not be null.");
+    assertFalse(tasks.isEmpty(), "Assigned tasks list should not be empty.");
+
+    // Check that tasks are sorted in expected order: Very High -> High -> Medium
+    assertEquals("Very High", tasks.get(0).getPriority(), "The first task should have 'Very High' priority.");
+    assertEquals("High", tasks.get(1).getPriority(), "The second task should have 'High' priority.");
+    assertEquals("Medium", tasks.get(2).getPriority(), "The third task should have 'Medium' priority.");
+
+    // Step 7: Cleanup
+    DatabaseUtils.deleteAssignedTask(disasterId1, "Rescue Team", "Handle rescue operations");
+    DatabaseUtils.deleteAssignedTask(disasterId2, "Medical Team", "Provide medical aid");
+    DatabaseUtils.deleteAssignedTask(disasterId3, "Firefighters", "Control fire");
+
+    DatabaseUtils.deleteDisasterReport("testuser", "Earthquake", "Location A");
+    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
+    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location C");
+}
+
+
 
     @Test
-    public void testGetAssignedTasksSortedByPriority() throws SQLException {
-        List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
-        assertNotNull(tasks);
-        assertFalse(tasks.isEmpty());
-    }
+public void testUpdateTaskStatus() throws SQLException {
+    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location C", 7, "Severe fire");
+    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location C");
+    DatabaseUtils.saveAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
+    List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
+    assertNotNull(tasks, "The task list should not be null.");
+    assertFalse(tasks.isEmpty(), "There should be at least one task.");
+    AssignedTask task = tasks.stream()
+                             .filter(t -> t.getDisasterId() == disasterId)
+                             .findFirst()
+                             .orElseThrow(() -> new SQLException("Task not found"));
+    
+    System.out.println("Initial Task Status: " + task.getStatus());
+    DatabaseUtils.updateTaskStatus(disasterId, "Finished");
+    List<AssignedTask> updatedTasks = DatabaseUtils.getAssignedTasksSortedByPriority();
+    AssignedTask updatedTask = updatedTasks.stream()
+                                           .filter(t -> t.getDisasterId() == disasterId)
+                                           .findFirst()
+                                           .orElseThrow(() -> new SQLException("Updated task not found"));
+    System.out.println("Updated Task Status: " + updatedTask.getStatus());
+    assertEquals("Finished", updatedTask.getStatus(), "The task status should be updated to 'Finished'.");
+    DatabaseUtils.deleteAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
+    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location C");
+}
 
-    @Test
-    public void testUpdateTaskStatus() throws SQLException {
-        DatabaseUtils.updateTaskStatus(1, "Finished");
-        List<AssignedTask> finishedTasks = DatabaseUtils.getAllFinishedTasks();
-        assertTrue(finishedTasks.stream().anyMatch(task -> task.getDisasterId() == 1 && task.getStatus().equals("Finished")));
-    }
+   @Test
+public void testGetAllFinishedTasks() throws SQLException {
+    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 5, "Moderate flood");
+    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
+    DatabaseUtils.saveAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+    DatabaseUtils.updateTaskStatus(disasterId, "Finished");
+    List<AssignedTask> finishedTasks = DatabaseUtils.getAllFinishedTasks();
+    assertNotNull(finishedTasks, "Finished tasks list should not be null.");
+    assertFalse(finishedTasks.isEmpty(), "There should be at least one finished task.");
+    boolean taskFound = finishedTasks.stream()
+                                     .anyMatch(task -> task.getDisasterId() == disasterId && 
+                                                       task.getTaskDescription().equals("Handle rescue operations.") &&
+                                                       task.getStatus().equals("Finished"));
+    assertTrue(taskFound, "The finished task should be present in the result.");
+    DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
+}
 
-    @Test
-    public void testGetAllFinishedTasks() throws SQLException {
-        List<AssignedTask> tasks = DatabaseUtils.getAllFinishedTasks();
-        assertNotNull(tasks);
-        assertFalse(tasks.isEmpty());
-    }
+@Test
+public void testGetFinishedTasksForUser() throws SQLException {
+    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 5, "Minor flooding");
+    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
+    DatabaseUtils.saveAssignedTask(disasterId, "testuser", "Handle flood evacuation");
+    DatabaseUtils.updateTaskStatus(disasterId, "Finished");
+    List<AssignedTask> tasks = DatabaseUtils.getFinishedTasksForUser("testuser");
+    assertNotNull(tasks, "The list of finished tasks should not be null.");
+    assertFalse(tasks.isEmpty(), "There should be at least one finished task for the user.");
+    DatabaseUtils.deleteAssignedTask(disasterId, "testuser", "Handle flood evacuation");
+    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
+}
 
-    @Test
-    public void testGetFinishedTasksForUser() throws SQLException {
-        List<AssignedTask> tasks = DatabaseUtils.getFinishedTasksForUser("bishwas");
-        assertNotNull(tasks);
-        assertFalse(tasks.isEmpty());
-    }
 
     @Test
     public void testDuplicateUsername() {
@@ -196,20 +278,44 @@ public class AppTest {
         assertTrue(inProgressTasks.stream().anyMatch(task -> task.getDisasterId() == 1 && task.getStatus().equals("Still in Process")));
     }
 
-    @Test
-    public void testGetAllDisasterReports() throws SQLException {
-        List<DisasterReport> reports = DatabaseUtils.getAllDisasterReports();
-        assertNotNull(reports);
-        assertFalse(reports.isEmpty(), "There should be some disaster reports in the database.");
-    }
+@Test
+public void testGetAllDisasterReports() throws SQLException {
+    // Insert a disaster report to ensure there's at least one in the database
+    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "Severe fire");
 
-    @Test
-    public void testSaveAssignedTask() throws SQLException {
-        DatabaseUtils.saveAssignedTask(1, "Evacuation Department", "Handle evacuation process.");
-        List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
-        assertTrue(tasks.stream().anyMatch(task -> task.getTaskDescription().equals("Handle evacuation process.")));
-        DatabaseUtils.deleteAssignedTask(1, "Evacuation Department", "Handle evacuation process.");
-    }
+    // Retrieve all disaster reports
+    List<DisasterReport> reports = DatabaseUtils.getAllDisasterReports();
+
+    // Assert that the list is not null
+    assertNotNull(reports, "The disaster reports list should not be null.");
+
+    // Assert that the list is not empty
+    assertFalse(reports.isEmpty(), "There should be at least one disaster report in the database.");
+
+
+    // Cleanup: Delete the disaster report after the test to maintain test isolation
+    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
+}
+
+@Test
+public void testSaveAssignedTask() throws SQLException {
+    // Step 1: Save a disaster report and get the disaster report ID
+    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "Severe fire");
+    
+    // Retrieve the ID of the disaster report you just created
+    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location A");
+    
+    // Step 2: Use the disaster ID to save the assigned task
+    DatabaseUtils.saveAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
+    
+    // Step 3: Verify that the task was saved correctly
+    List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
+    assertTrue(tasks.stream().anyMatch(task -> task.getTaskDescription().equals("Handle evacuation process.")));
+ 
+    // Step 4: Clean up - delete the assigned task and disaster report
+    DatabaseUtils.deleteAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
+    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
+}
 
     @Test
     public void testFetchAllUsers() {
@@ -261,6 +367,7 @@ public class AppTest {
     @AfterEach
     void tearDown() {
         System.out.println("Tearing down after each test.");
+        DatabaseUtils.deleteUser("testuser");
     }
 
     @AfterAll

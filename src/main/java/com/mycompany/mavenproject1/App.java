@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import com.mycompany.mavenproject1.util.DatabaseUtils;
 /**
  * Main class for launching the JavaFX application. This class initializes the
  * application and loads the login page as the starting point.
@@ -14,36 +14,28 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    /**
-     * The main entry point for the JavaFX application. This method is
-     * automatically called when the application is launched.
-     *
-     * @param primaryStage the primary stage for this application, onto which
-     * the application scene can be set.
-     * @throws Exception if there is an issue loading the FXML resource.
-     */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        // Setup the database and tables before loading the login page
+        DatabaseUtils.setupDatabase();
+
         // Load the login page from the FXML file
         Parent root = FXMLLoader.load(getClass().getResource("/com/mycompany/mavenproject1/view/LoginPage.fxml"));
 
-        // Set the title of the application window
-        primaryStage.setTitle("login page");
-
-        // Set the scene for the primary stage
+        primaryStage.setTitle("Login Page");
         primaryStage.setScene(new Scene(root, 400, 400));
-
-        // Show the primary stage
         primaryStage.show();
     }
 
-    /**
-     * The main method that launches the JavaFX application.
-     *
-     * @param args command-line arguments (not used in this application).
-     */
     public static void main(String[] args) {
-        // Launch the JavaFX application
         launch(args);
     }
 }
+
+
+
+
+
+
+
+

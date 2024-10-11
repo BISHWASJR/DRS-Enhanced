@@ -29,20 +29,67 @@ import java.util.List;
  */
 public class DatabaseUtils {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/userdb"; // Database URL
+  private static final String URL = "jdbc:mysql://localhost:3306/userdb"; // Include the database name in the URL
     private static final String USER = "root"; // MySQL username
     private static final String PASSWORD = "Bishwas@2055"; // MySQL password
 
-    /**
-     * Establishes a connection to the database.
-     *
-     * @return a Connection object to interact with the database.
-     * @throws SQLException if a database access error occurs.
-     */
+    // Method to establish connection with the database
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    // Method to create the database and tables if they don't exist
+    public static void setupDatabase() {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", USER, PASSWORD);
+             Statement stmt = conn.createStatement()) {
+
+            // Step 1: Create the database if it doesn't exist
+            String createDatabase = "CREATE DATABASE IF NOT EXISTS userdb";
+            stmt.executeUpdate(createDatabase);
+
+            // Step 2: Switch to the newly created database
+            String useDatabase = "USE userdb";
+            stmt.executeUpdate(useDatabase);
+            // Step 3: Create the users table
+            String createUsersTable = "CREATE TABLE IF NOT EXISTS users (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "username VARCHAR(255) NOT NULL, " +
+                    "password VARCHAR(255) NOT NULL, " +
+                    "email VARCHAR(255), " +
+                    "phone_number VARCHAR(20), " +
+                    "role VARCHAR(50))";
+            stmt.executeUpdate(createUsersTable);
+
+            // Step 4: Create the disaster_reports table
+            String createDisasterReportsTable = "CREATE TABLE IF NOT EXISTS disaster_reports (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "username VARCHAR(255) NOT NULL, " +
+                    "disaster_type VARCHAR(255) NOT NULL, " +
+                    "location VARCHAR(255) NOT NULL, " +
+                    "severity INT NOT NULL, " +
+                    "description TEXT, " +
+                    "priority VARCHAR(50), " +
+                    "report_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+            stmt.executeUpdate(createDisasterReportsTable);
+
+            // Step 5: Create the assigned_tasks table
+            String createAssignedTasksTable = "CREATE TABLE IF NOT EXISTS assigned_tasks (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "disaster_id INT NOT NULL, " +
+                    "department VARCHAR(255) NOT NULL, " +
+                    "task_description TEXT, " +
+                    "status VARCHAR(50) DEFAULT 'Still in Process', " +
+                    "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "FOREIGN KEY (disaster_id) REFERENCES disaster_reports(id))";
+            stmt.executeUpdate(createAssignedTasksTable);
+
+            System.out.println("Database setup complete.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error setting up the database", e);
+        }
+    }
     /**
      * Hashes a password using the SHA-256 algorithm.
      *
@@ -117,7 +164,23 @@ public class DatabaseUtils {
         }
         return null;
     }
-
+public static int getDisasterReportId(String username, String disasterType, String location) throws SQLException {
+    Connection connection = getConnection();
+    String query = "SELECT id FROM disaster_reports WHERE username = ? AND disaster_type = ? AND location = ?";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, username);
+        stmt.setString(2, disasterType);
+        stmt.setString(3, location);
+        
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("id");
+        } else {
+            throw new SQLException("No matching disaster report found.");
+        }
+    }
+}
     /**
      * Checks if the provided login credentials are valid.
      *
@@ -125,6 +188,7 @@ public class DatabaseUtils {
      * @param password the password entered by the user.
      * @return true if the login is valid, false otherwise.
      */
+    
     public static boolean isValidLogin(String username, String password) {
         if (username == null || username.trim().isEmpty()) {
             return false;

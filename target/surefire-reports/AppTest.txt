@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: AppTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.835 s <<< FAILURE! - in AppTest
-AppTest  Time elapsed: 1.832 s  <<< ERROR!
-java.sql.SQLSyntaxErrorException: Unknown database 'userdb'
-	at AppTest.setupAll(AppTest.java:25)
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.596 s - in AppTest
