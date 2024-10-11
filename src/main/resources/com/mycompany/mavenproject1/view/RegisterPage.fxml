@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane fx:id="grid" alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.RegisterPageController">
+<GridPane fx:id="grid" alignment="CENTER" hgap="10" vgap="10" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.RegisterPageController">
     <padding>
         <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
@@ -37,6 +37,6 @@
     <ComboBox fx:id="roleComboBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
     <!-- Register Button -->
-    <Button fx:id="registerBtn" text="Register"  onAction="#handleRegister" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT"/>
-    <Button text="Back" fx:id="backButton" onAction="#handleBackToLogin" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="RIGHT"/>
+    <Button fx:id="registerBtn" text="Register"  onAction="#handleRegister" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" style="-fx-background-color: green; -fx-text-fill: white;"/>
+    <Button text="Back" fx:id="backButton" onAction="#handleBackToLogin" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="RIGHT" style="-fx-background-color: red; -fx-text-fill: white;"/>
 </GridPane>

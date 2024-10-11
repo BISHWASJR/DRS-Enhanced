@@ -296,7 +296,9 @@ public void testUpdateTaskStatusToInProgress() throws SQLException {
     assertEquals("Still in Process", task.getStatus(), "The task status should be updated to 'Still in Process'.");
 
     // Cleanup: Delete the task and the disaster report after the test
-    DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+  DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
+
+    // Step 5: Delete the disaster report
     DatabaseUtils.deleteDisasterReport("testuser", "Earthquake", "Location A");
 }
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.AssignTaskController" prefWidth="1000" prefHeight="800">
+<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" style="-fx-background-color: lightblue;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.AssignTaskController" prefWidth="1000" prefHeight="800">
     <padding>
         <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
