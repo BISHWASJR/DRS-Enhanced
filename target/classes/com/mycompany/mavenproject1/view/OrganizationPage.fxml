@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+
+<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.OrganizationPageController" prefWidth="1000" prefHeight="800">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Table to display the assigned tasks with disaster details -->
+    <TableView fx:id="taskTable" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" prefWidth="900" prefHeight="600">
+        <columns>
+            <TableColumn fx:id="disasterIdColumn" text="Disaster ID"/>
+            <TableColumn fx:id="disasterTypeColumn" text="Disaster Type"/>
+            <TableColumn fx:id="locationColumn" text="Location"/>
+            <TableColumn fx:id="departmentColumn" text="Department"/>
+            <TableColumn fx:id="taskDescriptionColumn" text="Task Description"/>
+            <TableColumn fx:id="priorityColumn" text="Priority"/>
+            <TableColumn fx:id="statusColumn" text="Status"/>
+        </columns>
+    </TableView>
+
+    <!-- Logout button -->
+    <Button text="Logout" onAction="#handleLogout" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT"/>
+</GridPane>

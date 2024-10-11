@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane fx:id="grid" alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.RegisterPageController">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Username Label and TextField -->
+    <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+    <!-- Password Label and PasswordField -->
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <!-- Re-enter Password Label and PasswordField -->
+    <Label text="Re-enter Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <PasswordField fx:id="reenterPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+    <!-- Email Label and TextField -->
+    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    <!-- Phone Number Label and TextField -->
+    <Label text="Phone Number:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <TextField fx:id="phoneNumberField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+    <!-- Role Selection -->
+    <Label text="Role:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <ComboBox fx:id="roleComboBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+    <!-- Register Button -->
+    <Button fx:id="registerBtn" text="Register"  onAction="#handleRegister" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT"/>
+    <Button text="Back" fx:id="backButton" onAction="#handleBackToLogin" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="RIGHT"/>
+</GridPane>

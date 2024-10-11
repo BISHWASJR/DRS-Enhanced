@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane alignment="CENTER" hgap="10" prefHeight="800" prefWidth="1000" vgap="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.AdminPageController">
+    <padding>
+        <Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+    <children>
+        <TableView fx:id="userTable" prefHeight="500" prefWidth="7000" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <columns>
+                <TableColumn fx:id="usernameColumn" text="Username" />
+                <TableColumn fx:id="roleColumn" text="Role" />
+                <TableColumn fx:id="actionsColumn" text="Actions" />
+            </columns>
+        </TableView>
+        <Button onAction="#loadUsers" text="Refresh" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        
+       <Button onAction="#handleLogout" text="Logout" GridPane.rowIndex="3" />
+    </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

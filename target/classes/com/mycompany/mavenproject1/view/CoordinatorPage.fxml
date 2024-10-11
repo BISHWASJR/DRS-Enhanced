@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextArea?>
+
+<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.mavenproject1.controller.CoordinatorPageController" prefWidth="1000" prefHeight="800">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Disaster Report and Assign Task buttons -->
+    <Button text="Disaster Report" onAction="#initialize" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="LEFT"/>
+    <Button text="Assign Task" onAction="#handleAssignTask" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT"/>
+    <Button text="Logout" onAction="#handleLogout" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="RIGHT"/>
+
+    <!-- Table displaying disaster reports -->
+    <TableView fx:id="disasterTable" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" prefWidth="800" prefHeight="600">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID"/>
+            <TableColumn fx:id="usernameColumn" text="Username"/>
+            <TableColumn fx:id="disasterTypeColumn" text="Disaster Type"/>
+            <TableColumn fx:id="locationColumn" text="Location"/>
+            <TableColumn fx:id="severityColumn" text="Severity"/>
+            <TableColumn fx:id="descriptionColumn" text="Description"/>
+            <TableColumn fx:id="reportTimeColumn" text="Report Time"/>
+            <TableColumn fx:id="priorityColumn" text="Priority"/>
+        </columns>
+    </TableView>
+
+    <!-- Save and Logout buttons -->
+    <Button text="Save Priorities" onAction="#handleSavePriorities" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="LEFT"/>
+    <Button text="View Notifications" onAction="#handleViewNotifications" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT"/>
+    <TextArea fx:id="notificationArea" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2" prefHeight="150" prefWidth="300"/>
+</GridPane>
