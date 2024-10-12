@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="AppTest" time="6.456" tests="29" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="AppTest" time="2.604" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,8 +15,9 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\Dell\AppData\Local\Temp\surefire6680176720802976956 2024-10-12T23-12-09_812-jvmRun1 surefire6057509036019228595tmp surefire_05919249937271174314tmp"/>
+    <property name="sun.java.command" value="org.apache.maven.surefire.booter.ForkedBooter C:\Users\Dell\AppData\Local\Temp\surefire13176982626848018539 2024-10-13T00-51-45_767-jvmRun1 surefire16095852999333072950tmp surefire_08176360338871589448tmp"/>
     <property name="jdk.debug" value="release"/>
+    <property name="test" value="AppTest#testSuccessfulRegistration"/>
     <property name="surefire.test.class.path" value="F:\assignment3DRS\mavenproject1\target\test-classes;C:\Users\Dell\.m2\repository\org\openjfx\javafx-controls\13\javafx-controls-13.jar;C:\Users\Dell\.m2\repository\org\openjfx\javafx-graphics\13\javafx-graphics-13.jar;C:\Users\Dell\.m2\repository\org\openjfx\javafx-base\13\javafx-base-13.jar;C:\Users\Dell\.m2\repository\org\openjfx\javafx-fxml\13\javafx-fxml-13.jar;C:\Users\Dell\.m2\repository\mysql\mysql-connector-java\8.0.29\mysql-connector-java-8.0.29.jar;C:\Users\Dell\.m2\repository\com\google\protobuf\protobuf-java\3.19.4\protobuf-java-3.19.4.jar;C:\Users\Dell\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.0\junit-jupiter-api-5.6.0.jar;C:\Users\Dell\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\Dell\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Dell\.m2\repository\org\junit\platform\junit-platform-commons\1.6.0\junit-platform-commons-1.6.0.jar;C:\Users\Dell\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.0\junit-jupiter-engine-5.6.0.jar;C:\Users\Dell\.m2\repository\org\junit\platform\junit-platform-engine\1.6.0\junit-platform-engine-1.6.0.jar;C:\Users\Dell\.m2\repository\org\testfx\testfx-core\4.0.16-alpha\testfx-core-4.0.16-alpha.jar;C:\Users\Dell\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Dell\.m2\repository\org\assertj\assertj-core\3.13.2\assertj-core-3.13.2.jar;C:\Users\Dell\.m2\repository\org\testfx\testfx-junit5\4.0.16-alpha\testfx-junit5-4.0.16-alpha.jar;C:\Users\Dell\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.0\junit-jupiter-params-5.6.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Dell"/>
@@ -59,33 +60,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testInvalidEmailAndPhoneRegistration" classname="AppTest" time="0.205"/>
-  <testcase name="testEmptyDescription" classname="AppTest" time="0.108"/>
-  <testcase name="testGetFinishedTasksForUser" classname="AppTest" time="0.351"/>
-  <testcase name="testSaveDisasterReport" classname="AppTest" time="0.385"/>
-  <testcase name="testInvalidEmailRegistration" classname="AppTest" time="0.08"/>
-  <testcase name="testSaveUser" classname="AppTest" time="0.151"/>
-  <testcase name="testUpdateTaskStatus" classname="AppTest" time="0.337"/>
-  <testcase name="testEmptyUsername" classname="AppTest" time="0.095"/>
-  <testcase name="testEmptyPasswordRegistration" classname="AppTest" time="0.083"/>
-  <testcase name="testSuccessfulRegistration" classname="AppTest" time="0.161"/>
-  <testcase name="testValidLogin" classname="AppTest" time="0.077"/>
-  <testcase name="testGetAllFinishedTasks" classname="AppTest" time="0.183"/>
-  <testcase name="testUpdateUserRole" classname="AppTest" time="0.088"/>
-  <testcase name="testNonExistentUserRole" classname="AppTest" time="0.066"/>
-  <testcase name="testSaveAssignedTask" classname="AppTest" time="0.172"/>
-  <testcase name="testGetAssignedTasksSortedByPriority" classname="AppTest" time="0.455"/>
-  <testcase name="testPasswordEncryption" classname="AppTest" time="0.072"/>
-  <testcase name="testDuplicateUsername" classname="AppTest" time="0.126"/>
-  <testcase name="testIsEmailAndPhoneRegistered" classname="AppTest" time="0.125"/>
-  <testcase name="testEmptySeverity" classname="AppTest" time="0.058"/>
-  <testcase name="testEmptyDisasterType" classname="AppTest" time="0.048"/>
-  <testcase name="testFetchAllUsers" classname="AppTest" time="0.06"/>
-  <testcase name="testEmptyLocation" classname="AppTest" time="0.053"/>
-  <testcase name="testDeleteUser" classname="AppTest" time="0.071"/>
-  <testcase name="testGetUserRole" classname="AppTest" time="0.089"/>
-  <testcase name="testUpdateTaskStatusToInProgress" classname="AppTest" time="0.157"/>
-  <testcase name="testGetAllDisasterReports" classname="AppTest" time="0.107"/>
-  <testcase name="testEmptyUsernameRegistration" classname="AppTest" time="0.056"/>
-  <testcase name="testInvalidLogin" classname="AppTest" time="0.082"/>
+  <testcase name="testSuccessfulRegistration" classname="AppTest" time="0.264"/>
 </testsuite>
