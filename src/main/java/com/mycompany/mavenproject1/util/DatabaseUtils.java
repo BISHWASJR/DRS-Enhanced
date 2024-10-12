@@ -83,7 +83,7 @@ public class DatabaseUtils {
                     "FOREIGN KEY (disaster_id) REFERENCES disaster_reports(id))";
             stmt.executeUpdate(createAssignedTasksTable);
 
-            System.out.println("Database setup complete.");
+           // System.out.println("Database setup complete.");
 
         } catch (SQLException e) {
             e.printStackTrace();

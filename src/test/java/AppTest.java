@@ -21,33 +21,32 @@ public class AppTest {
 
    @BeforeAll
 static void setupAll() throws SQLException {
-    System.out.println("Setting up before all tests.");
+
     DatabaseUtils.setupDatabase();  // Ensure database and tables are created
     connection = DatabaseUtils.getConnection();
-    System.out.println("Database connection established.");
-    DatabaseUtils.saveUser("testuser", "password123", "testuser@example.com", "9876543210", "User");
+    DatabaseUtils.saveUser("ram", "ram@123", "ram@gmail.com", "9841407177", "User");
     Platform.startup(() -> {
     });
 }
 
     @BeforeEach
     void setup() {
-        DatabaseUtils.deleteUser("testuser");
-    DatabaseUtils.saveUser("testuser", "password123", "testuser@example.com", "9876543210", "User");  
+        DatabaseUtils.deleteUser("ram");
+    DatabaseUtils.saveUser("ram", "ram@123", "ram@gmail.com", "9841407177", "User");  
     }
 
     @Test
     public void testSuccessfulRegistration() throws SQLException {
-        DatabaseUtils.saveUser("registerUser", "password123", "registeruser@example.com", "9876543212", "User");
-        boolean isRegistered = DatabaseUtils.isValidLogin("registerUser", "password123");
+        DatabaseUtils.saveUser("thanu", "thanu@123", "thanu@gmail.com", "9876543212", "User");
+        boolean isRegistered = DatabaseUtils.isValidLogin("thanu", "thanu@123");
         assertTrue(isRegistered, "User should be registered successfully.");
-        DatabaseUtils.deleteUser("registerUser");
+        DatabaseUtils.deleteUser("thanu");
     }
 
     @Test
     public void testInvalidEmailRegistration() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveUser("invalidEmailUser", "password123", "invalidEmail", "9876543214", "User");
+            DatabaseUtils.saveUser("pursoth", "pursoth123", "pursoth.com", "9876543214", "User");
         });
         String expectedMessage = "Invalid email format";
         String actualMessage = exception.getMessage();
@@ -57,7 +56,7 @@ static void setupAll() throws SQLException {
     @Test
     public void testEmptyPasswordRegistration() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveUser("emptyPasswordUser", "", "emptypassworduser@test.com", "9876543215", "User");
+            DatabaseUtils.saveUser("ashim", "", "ashim@gmail.com", "9876543215", "User");
         });
         String expectedMessage = "Password cannot be empty.";
         String actualMessage = exception.getMessage();
@@ -66,14 +65,14 @@ static void setupAll() throws SQLException {
 
     @Test
     public void testValidLogin() {
-        boolean result = DatabaseUtils.isValidLogin("testuser", "password123");
+        boolean result = DatabaseUtils.isValidLogin("ram", "ram@123");
         assertTrue(result);
     }
 
     @Test
     public void testEmptyUsernameRegistration() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveUser("", "password123", "emptyusername@example.com", "9876543215", "User");
+            DatabaseUtils.saveUser("", "ram123", "ram@gmail.com", "9876543215", "User");
         });
         String expectedMessage = "Username cannot be empty.";
         String actualMessage = exception.getMessage();
@@ -82,64 +81,67 @@ static void setupAll() throws SQLException {
 
     @Test
     public void testInvalidLogin() {
-        boolean result = DatabaseUtils.isValidLogin("testuser", "wrongpassword");
+        boolean result = DatabaseUtils.isValidLogin("ram", "ram");
         assertFalse(result);
     }
 
     @Test
     public void testEmptyUsername() {
-        boolean isLoggedIn = DatabaseUtils.isValidLogin("", "password123");
+        boolean isLoggedIn = DatabaseUtils.isValidLogin("", "ram@123");
         assertFalse(isLoggedIn, "Login should fail if the username is empty.");
     }
 
 @Test
 public void testGetUserRole() {
-    DatabaseUtils.saveUser("bishwas", "password123", "bishwas@example.com", "9876543210", "User");
-    String role = DatabaseUtils.getUserRole("bishwas");
+    DatabaseUtils.saveUser("bhattarai", "bhattarai@123", "bhattarai@gmail.com", "9876543210", "User");
+    String role = DatabaseUtils.getUserRole("bhattarai");
     assertEquals("User", role, "The user role should be 'User'.");
-    DatabaseUtils.deleteUser("bishwas");
+    DatabaseUtils.deleteUser("bhattarai");
 }
 
     @Test
     public void testSaveUser() {
-        DatabaseUtils.saveUser("newuser", "password123", "newuser@example.com", "9876543210", "User");
-        boolean result = DatabaseUtils.isValidLogin("newuser", "password123");
+        DatabaseUtils.saveUser("pursoth", "pursoth123", "pursoth@gmail.com", "9876543210", "User");
+        boolean result = DatabaseUtils.isValidLogin("pursoth", "pursoth123");
         assertTrue(result);
     }
 
     @Test
     public void testUpdateUserRole() {
-        DatabaseUtils.updateUserRole("testuser", "Coordinator");
-        String role = DatabaseUtils.getUserRole("testuser");
+        DatabaseUtils.updateUserRole("ram", "Coordinator");
+        String role = DatabaseUtils.getUserRole("ram");
         assertEquals("Coordinator", role);
     }
 
     @Test
     public void testDeleteUser() {
-        DatabaseUtils.deleteUser("newuser");
-        boolean result = DatabaseUtils.isValidLogin("newuser", "password123");
+        DatabaseUtils.deleteUser("pursoth");
+        boolean result = DatabaseUtils.isValidLogin("pursoth", "pursoth123");
         assertFalse(result);
     }
 
     @Test
     public void testSaveDisasterReport() throws SQLException {
-        DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "Severe fire");
+        DatabaseUtils.saveDisasterReport("ram", "Fire", "granville", 8, "Severe fire");
         List<DisasterReport> reports = DatabaseUtils.getAllDisasterReports();
         assertFalse(reports.isEmpty());
-        assertTrue(reports.stream().anyMatch(r -> r.getUsername().equals("testuser") && r.getDisasterType().equals("Fire") && r.getLocation().equals("Location A")));
-        DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
+        assertTrue(reports.stream().anyMatch(r -> r.getUsername().equals("ram") && r.getDisasterType().equals("Fire") && r.getLocation().equals("granville")));
+        DatabaseUtils.deleteDisasterReport("ram", "Fire", "granville");
     }
 @Test
 public void testGetAssignedTasksSortedByPriority() throws SQLException {
     // Step 1: Insert disaster reports without priority
-    DatabaseUtils.saveDisasterReport("testuser", "Earthquake", "Location A", 1, "Severe earthquake");
-    int disasterId1 = DatabaseUtils.getDisasterReportId("testuser", "Earthquake", "Location A");
+    DatabaseUtils.saveDisasterReport("ram", "Earthquake", "granville", 1, "Severe earthquake");
+    int disasterId1 = DatabaseUtils.getDisasterReportId("ram", "Earthquake", "granville");
+   
 
-    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 2, "Severe flood");
-    int disasterId2 = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
+    DatabaseUtils.saveDisasterReport("ram", "Flood", "auburn", 2, "Severe flood");
+    int disasterId2 = DatabaseUtils.getDisasterReportId("ram", "Flood", "auburn");
 
-    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location C", 3, "Severe fire");
-    int disasterId3 = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location C");
+
+    DatabaseUtils.saveDisasterReport("ram", "Fire", "central", 3, "Severe fire");
+    int disasterId3 = DatabaseUtils.getDisasterReportId("ram", "Fire", "central");
+
 
     // Step 2: Update priority for each disaster report
     DatabaseUtils.updateDisasterPriority(disasterId1, "Very High");
@@ -147,9 +149,9 @@ public void testGetAssignedTasksSortedByPriority() throws SQLException {
     DatabaseUtils.updateDisasterPriority(disasterId3, "Medium");
 
     // Step 3: Insert assigned tasks for these disaster reports
-    DatabaseUtils.saveAssignedTask(disasterId1, "Rescue Team", "Handle rescue operations");
+    DatabaseUtils.saveAssignedTask(disasterId1, "Search and Rescue team", "Handle rescue operations");
     DatabaseUtils.saveAssignedTask(disasterId2, "Medical Team", "Provide medical aid");
-    DatabaseUtils.saveAssignedTask(disasterId3, "Firefighters", "Control fire");
+    DatabaseUtils.saveAssignedTask(disasterId3, "Fire Department", "Control fire");
 
     // Step 4: Fetch tasks sorted by priority
     List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
@@ -167,21 +169,21 @@ public void testGetAssignedTasksSortedByPriority() throws SQLException {
     assertEquals("Medium", tasks.get(2).getPriority(), "The third task should have 'Medium' priority.");
 
     // Step 7: Cleanup
-    DatabaseUtils.deleteAssignedTask(disasterId1, "Rescue Team", "Handle rescue operations");
+    DatabaseUtils.deleteAssignedTask(disasterId1, "Search and Rescue team", "Handle rescue operations");
     DatabaseUtils.deleteAssignedTask(disasterId2, "Medical Team", "Provide medical aid");
-    DatabaseUtils.deleteAssignedTask(disasterId3, "Firefighters", "Control fire");
+    DatabaseUtils.deleteAssignedTask(disasterId3, "Fire Department", "Control fire");
 
-    DatabaseUtils.deleteDisasterReport("testuser", "Earthquake", "Location A");
-    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
-    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location C");
+    DatabaseUtils.deleteDisasterReport("ram", "Earthquake", "granville");
+    DatabaseUtils.deleteDisasterReport("ram", "Flood", "auburn");
+    DatabaseUtils.deleteDisasterReport("ram", "Fire", "central");
 }
 
 
 
     @Test
 public void testUpdateTaskStatus() throws SQLException {
-    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location C", 7, "Severe fire");
-    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location C");
+    DatabaseUtils.saveDisasterReport("ram", "Fire", "central", 7, "Severe fire");
+    int disasterId = DatabaseUtils.getDisasterReportId("ram", "Fire", "central");
     DatabaseUtils.saveAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
     List<AssignedTask> tasks = DatabaseUtils.getAssignedTasksSortedByPriority();
     assertNotNull(tasks, "The task list should not be null.");
@@ -191,23 +193,23 @@ public void testUpdateTaskStatus() throws SQLException {
                              .findFirst()
                              .orElseThrow(() -> new SQLException("Task not found"));
     
-    System.out.println("Initial Task Status: " + task.getStatus());
+    //System.out.println("Initial Task Status: " + task.getStatus());
     DatabaseUtils.updateTaskStatus(disasterId, "Finished");
     List<AssignedTask> updatedTasks = DatabaseUtils.getAssignedTasksSortedByPriority();
     AssignedTask updatedTask = updatedTasks.stream()
                                            .filter(t -> t.getDisasterId() == disasterId)
                                            .findFirst()
                                            .orElseThrow(() -> new SQLException("Updated task not found"));
-    System.out.println("Updated Task Status: " + updatedTask.getStatus());
+    //System.out.println("Updated Task Status: " + updatedTask.getStatus());
     assertEquals("Finished", updatedTask.getStatus(), "The task status should be updated to 'Finished'.");
     DatabaseUtils.deleteAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
-    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location C");
+    DatabaseUtils.deleteDisasterReport("ram", "Fire", "central");
 }
 
    @Test
 public void testGetAllFinishedTasks() throws SQLException {
-    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 5, "Moderate flood");
-    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
+    DatabaseUtils.saveDisasterReport("ram", "Flood", "auburn", 5, "Moderate flood");
+    int disasterId = DatabaseUtils.getDisasterReportId("ram", "Flood", "auburn");
     DatabaseUtils.saveAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
     DatabaseUtils.updateTaskStatus(disasterId, "Finished");
     List<AssignedTask> finishedTasks = DatabaseUtils.getAllFinishedTasks();
@@ -219,20 +221,20 @@ public void testGetAllFinishedTasks() throws SQLException {
                                                        task.getStatus().equals("Finished"));
     assertTrue(taskFound, "The finished task should be present in the result.");
     DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
-    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
+    DatabaseUtils.deleteDisasterReport("ram", "Flood", "auburn");
 }
 
 @Test
 public void testGetFinishedTasksForUser() throws SQLException {
-    DatabaseUtils.saveDisasterReport("testuser", "Flood", "Location B", 5, "Minor flooding");
-    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Flood", "Location B");
-    DatabaseUtils.saveAssignedTask(disasterId, "testuser", "Handle flood evacuation");
+    DatabaseUtils.saveDisasterReport("ram", "Flood", "auburn", 5, "Minor flooding");
+    int disasterId = DatabaseUtils.getDisasterReportId("ram", "Flood", "auburn");
+    DatabaseUtils.saveAssignedTask(disasterId, "ram", "Handle flood evacuation");
     DatabaseUtils.updateTaskStatus(disasterId, "Finished");
-    List<AssignedTask> tasks = DatabaseUtils.getFinishedTasksForUser("testuser");
+    List<AssignedTask> tasks = DatabaseUtils.getFinishedTasksForUser("ram");
     assertNotNull(tasks, "The list of finished tasks should not be null.");
     assertFalse(tasks.isEmpty(), "There should be at least one finished task for the user.");
-    DatabaseUtils.deleteAssignedTask(disasterId, "testuser", "Handle flood evacuation");
-    DatabaseUtils.deleteDisasterReport("testuser", "Flood", "Location B");
+    DatabaseUtils.deleteAssignedTask(disasterId, "ram", "Handle flood evacuation");
+    DatabaseUtils.deleteDisasterReport("ram", "Flood", "auburn");
 }
 
 
@@ -274,10 +276,10 @@ public void testGetFinishedTasksForUser() throws SQLException {
 @Test
 public void testUpdateTaskStatusToInProgress() throws SQLException {
     // Step 1: Ensure that a disaster report exists for the task
-    DatabaseUtils.saveDisasterReport("testuser", "Earthquake", "Location A", 7, "Severe earthquake");
+    DatabaseUtils.saveDisasterReport("ram", "Earthquake", "granville", 7, "Severe earthquake");
     
     // Step 2: Retrieve the disaster report ID
-    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Earthquake", "Location A");
+    int disasterId = DatabaseUtils.getDisasterReportId("ram", "Earthquake", "granville");
 
     // Step 3: Save the assigned task
     DatabaseUtils.saveAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
@@ -299,14 +301,14 @@ public void testUpdateTaskStatusToInProgress() throws SQLException {
   DatabaseUtils.deleteAssignedTask(disasterId, "Rescue Department", "Handle rescue operations.");
 
     // Step 5: Delete the disaster report
-    DatabaseUtils.deleteDisasterReport("testuser", "Earthquake", "Location A");
+    DatabaseUtils.deleteDisasterReport("ram", "Earthquake", "granville");
 }
 
 
 @Test
 public void testGetAllDisasterReports() throws SQLException {
     // Insert a disaster report to ensure there's at least one in the database
-    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "Severe fire");
+    DatabaseUtils.saveDisasterReport("ram", "Fire", "granville", 8, "Severe fire");
 
     // Retrieve all disaster reports
     List<DisasterReport> reports = DatabaseUtils.getAllDisasterReports();
@@ -319,16 +321,16 @@ public void testGetAllDisasterReports() throws SQLException {
 
 
     // Cleanup: Delete the disaster report after the test to maintain test isolation
-    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
+    DatabaseUtils.deleteDisasterReport("ram", "Fire", "granville");
 }
 
 @Test
 public void testSaveAssignedTask() throws SQLException {
     // Step 1: Save a disaster report and get the disaster report ID
-    DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "Severe fire");
+    DatabaseUtils.saveDisasterReport("ram", "Fire", "granville", 8, "Severe fire");
     
     // Retrieve the ID of the disaster report you just created
-    int disasterId = DatabaseUtils.getDisasterReportId("testuser", "Fire", "Location A");
+    int disasterId = DatabaseUtils.getDisasterReportId("ram", "Fire", "granville");
     
     // Step 2: Use the disaster ID to save the assigned task
     DatabaseUtils.saveAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
@@ -339,7 +341,7 @@ public void testSaveAssignedTask() throws SQLException {
  
     // Step 4: Clean up - delete the assigned task and disaster report
     DatabaseUtils.deleteAssignedTask(disasterId, "Evacuation Department", "Handle evacuation process.");
-    DatabaseUtils.deleteDisasterReport("testuser", "Fire", "Location A");
+    DatabaseUtils.deleteDisasterReport("ram", "Fire", "granville");
 }
 
     @Test
@@ -352,7 +354,7 @@ public void testSaveAssignedTask() throws SQLException {
     @Test
     public void testEmptyDisasterType() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveDisasterReport("testuser", "", "Location A", 8, "Severe fire");
+            DatabaseUtils.saveDisasterReport("ram", "", "granville", 8, "Severe fire");
         });
         String expectedMessage = "Disaster type cannot be empty";
         String actualMessage = exception.getMessage();
@@ -362,7 +364,7 @@ public void testSaveAssignedTask() throws SQLException {
     @Test
     public void testEmptyLocation() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveDisasterReport("testuser", "Fire", "", 8, "Severe fire");
+            DatabaseUtils.saveDisasterReport("ram", "Fire", "", 8, "Severe fire");
         });
         String expectedMessage = "Location cannot be empty";
         String actualMessage = exception.getMessage();
@@ -372,7 +374,7 @@ public void testSaveAssignedTask() throws SQLException {
     @Test
     public void testEmptySeverity() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 0, "Severe fire");
+            DatabaseUtils.saveDisasterReport("ram", "Fire", "granville", 0, "Severe fire");
         });
         String expectedMessage = "Severity must be greater than 0";
         String actualMessage = exception.getMessage();
@@ -382,7 +384,7 @@ public void testSaveAssignedTask() throws SQLException {
     @Test
     public void testEmptyDescription() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            DatabaseUtils.saveDisasterReport("testuser", "Fire", "Location A", 8, "");
+            DatabaseUtils.saveDisasterReport("ram", "Fire", "granville", 8, "");
         });
         String expectedMessage = "Description cannot be empty";
         String actualMessage = exception.getMessage();
@@ -391,18 +393,18 @@ public void testSaveAssignedTask() throws SQLException {
 
     @AfterEach
     void tearDown() {
-        System.out.println("Tearing down after each test.");
-        DatabaseUtils.deleteUser("testuser");
+        //System.out.println("Tearing down after each test.");
+        DatabaseUtils.deleteUser("ram");
     }
 
     @AfterAll
     static void tearDownAll() throws SQLException {
-        System.out.println("Tearing down after all tests.");
+        //System.out.println("Tearing down after all tests.");
         DatabaseUtils.deleteUser("newuser2");
-        DatabaseUtils.deleteUser("testuser");
+        DatabaseUtils.deleteUser("ram");
         if (connection != null && !connection.isClosed()) {
             connection.close();
-            System.out.println("Database connection closed.");
+         //   System.out.println("Database connection closed.");
         }
     }
 

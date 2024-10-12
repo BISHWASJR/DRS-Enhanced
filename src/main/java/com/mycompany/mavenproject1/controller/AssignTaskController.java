@@ -65,7 +65,8 @@ public class AssignTaskController {
                 "Debris Removal",
                 "Fire Department",
                 "Water Supply Department",
-                "Hospital"
+                "Hospital",
+                "Medical Team"
         ));
     }
 
